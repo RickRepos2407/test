@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- iOS Web-App Meta-Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Cockpit">
+    
+    <title>Mein Cockpit</title>
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 20px) 20px;
+        }
+
+        header {
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--accent);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            display: none;
+            cursor: pointer;
+        }
+
+        /* Ebenen (Views) */
+        .view {
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .view.active {
+            display: grid;
+            gap: 14px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Karten / Buttons */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.2s ease;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+            background: rgba(51, 65, 85, 0.8);
+        }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .details h2 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .details p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .chevron {
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 id="title">Mein Cockpit</h1>
+        <button class="back-btn" id="backBtn" onclick="showMainView()">‹ Zurück</button>
+    </header>
+
+    <!-- EBENE 1: Hauptkategorien -->
+    <div id="mainView" class="view active">
+        <div class="card" onclick="openCategory('vpn')">
+            <div class="card-content">
+                <div class="icon">🔒</div>
+                <div class="details">
+                    <h2>VPN & Netzwerk</h2>
+                    <p>Uni Basel, bbv, eduroam</p>
+                </div>
+            </div>
+            <span class="chevron">›</span>
+        </div>
+
+        <div class="card" onclick="openCategory('auth')">
+            <div class="card-content">
+                <div class="icon">🔑</div>
+                <div class="details">
+                    <h2>Authentifizierung</h2>
+                    <p>Authenticator & Switch edu ID</p>
+                </div>
+            </div>
+            <span class="chevron">›</span>
+        </div>
+
+        <div class="card" onclick="openCategory('storage')">
+            <div class="card-content">
+                <div class="icon">📂</div>
+                <div class="details">
+                    <h2>Literatur & Dateiablage</h2>
+                    <p>Zotero, OneDrive, Cloud</p>
+                </div>
+            </div>
+            <span class="chevron">›</span>
+        </div>
+
+        <div class="card" onclick="openCategory('comm')">
+            <div class="card-content">
+                <div class="icon">✉️</div>
+                <div class="details">
+                    <h2>Mail & Kommunikation</h2>
+                    <p>E-Mail, Teams, Zoom, Coaching</p>
+                </div>
+            </div>
+            <span class="chevron">›</span>
+        </div>
+
+        <div class="card" onclick="openCategory('smarthome')">
+            <div class="card-content">
+                <div class="icon">🏠</div>
+                <div class="details">
+                    <h2>Smart Home & Peripherie</h2>
+                    <p>Hue, Drucker, TV, Livebox</p>
+                </div>
+            </div>
+            <span class="chevron">›</span>
+        </div>
+    </div>
+
+    <!-- EBENE 2: Unterkategorien (Details) -->
+    <div id="subView" class="view">
+        <!-- Wird dynamisch per JavaScript befüllt -->
+    </div>
+
+    <script>
+        const categories = {
+            vpn: {
+                title: "VPN & Netzwerk",
+                items: [
+                    { name: "GlobalProtect (Uni Basel)", desc: "VPN-Verbindung zur Uni Basel", icon: "🌐", link: "globalprotect://" },
+                    { name: "bbv VPN", desc: "Sicherer Zugang Firmennetz", icon: "🔒", link: "openvpn://" },
+                    { name: "Orange Livebox", desc: "Router-Interface im Browser", icon: "📶", link: "http://192.168.1.1" }
+                ]
+            },
+            auth: {
+                title: "Authentifizierung",
+                items: [
+                    { name: "Authenticator", desc: "2FA-Einmalcodes generieren", icon: "🔑", link: "otpauth://" },
+                    { name: "Switch edu ID", desc: "Zentraler Hochschul-Login", icon: "🎓", link: "https://eduid.ch" }
+                ]
+            },
+            storage: {
+                title: "Literatur & Dateiablage",
+                items: [
+                    { name: "OneDrive / Cloud", desc: "Dokumente & Notizen", icon: "☁️", link: "ms-onedrive://" },
+                    { name: "Zotero / Literatur", desc: "Wissenschaftliche Quellen", icon: "📚", link: "https://www.zotero.org" }
+                ]
+            },
+            comm: {
+                title: "Mail & Kommunikation",
+                items: [
+                    { name: "MS Teams", desc: "Online-Beratung & Meetings", icon: "👥", link: "msteams://" },
+                    { name: "Zoom", desc: "Videokonferenzen", icon: "📹", link: "zoomus://" },
+                    { name: "Webmail (one.com)", desc: "E-Mail Postfächer", icon: "✉️", link: "https://mail.one.com" }
+                ]
+            },
+            smarthome: {
+                title: "Smart Home & Peripherie",
+                items: [
+                    { name: "Philips Hue", desc: "Lichtsteuerung", icon: "💡", link: "hue://" },
+                    { name: "Epson Smart Panel", desc: "Drucken & Scannen", icon: "🖨️", link: "https://epson.com" }
+                ]
+            }
+        };
+
+        function openCategory(key) {
+            const cat = categories[key];
+            const subView = document.getElementById("subView");
+            const mainView = document.getElementById("mainView");
+            const backBtn = document.getElementById("backBtn");
+            const title = document.getElementById("title");
+
+            title.innerText = cat.title;
+            backBtn.style.display = "block";
+
+            let html = "";
+            cat.items.forEach(item => {
+                html += `
+                    <a href="${item.link}" class="card">
+                        <div class="card-content">
+                            <div class="icon">${item.icon}</div>
+                            <div class="details">
+                                <h2>${item.name}</h2>
+                                <p>${item.desc}</p>
+                            </div>
+                        </div>
+                        <span class="chevron">↗</span>
+                    </a>
+                `;
+            });
+
+            subView.innerHTML = html;
+            mainView.classList.remove("active");
+            subView.classList.add("active");
+        }
+
+        function showMainView() {
+            document.getElementById("mainView").classList.add("active");
+            document.getElementById("subView").classList.remove("active");
+            document.getElementById("backBtn").style.display = "none";
+            document.getElementById("title").innerText = "Mein Cockpit";
+        }
+    </script>
+</body>
+</html>
