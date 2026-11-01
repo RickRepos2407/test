@@ -19,6 +19,11 @@
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --accent: #38bdf8;
+            --favorite-color: #f59e0b;
+            --green-free: rgba(34, 197, 94, 0.25);
+            --green-text: #4ade80;
+            --red-booked: rgba(239, 68, 68, 0.25);
+            --red-text: #f87171;
         }
 
         * {
@@ -37,28 +42,72 @@
         }
 
         header {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        h1 {
-            font-size: 28px;
+        .greeting-container h1 {
+            font-size: 24px;
             font-weight: 700;
             letter-spacing: -0.5px;
+            color: var(--text-primary);
         }
 
-        .back-btn {
+        .greeting-container p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .view-toggle-btn, .back-btn {
             background: rgba(255, 255, 255, 0.1);
-            border: none;
+            border: 1px solid var(--card-border);
             color: var(--accent);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 15px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
-            display: none;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .back-btn { display: none; }
+
+        /* Abgesetzter Spezial-Button für Raumplanung */
+        .special-button-container {
+            margin-bottom: 22px;
+        }
+
+        .special-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.15);
+            border-radius: 18px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .special-card:active {
+            transform: scale(0.98);
+        }
+
+        .special-card .icon {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
         }
 
         /* Ebenen (Views) */
@@ -67,31 +116,45 @@
             animation: fadeIn 0.25s ease-in-out;
         }
 
-        .view.active {
-            display: grid;
-            gap: 14px;
-        }
+        .view.active { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Karten / Buttons */
+        .section-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin: 20px 0 10px 4px;
+            font-weight: 600;
+        }
+
+        /* Layouts & Karten */
+        .grid-container {
+            display: grid;
+            gap: 12px;
+        }
+
+        .view-list { grid-template-columns: 1fr; }
+        .view-grid { grid-template-columns: repeat(2, 1fr); }
+        .view-icons { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 18px 20px;
+            padding: 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
             color: inherit;
             cursor: pointer;
-            transition: transform 0.1s ease, background 0.2s ease;
         }
 
         .card:active {
@@ -102,161 +165,486 @@
         .card-content {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
+            width: 100%;
         }
 
         .icon {
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
+            font-size: 22px;
+            width: 44px;
+            height: 44px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
+        .details { overflow: hidden; }
+
         .details h2 {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
             margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .details p {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chevron {
             color: var(--text-secondary);
             font-size: 18px;
             font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .view-grid .card { flex-direction: column; align-items: flex-start; gap: 12px; }
+        .view-grid .card-content { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .view-grid .chevron { display: none; }
+
+        .view-icons .card { flex-direction: column; justify-content: center; align-items: center; padding: 12px 8px; text-align: center; }
+        .view-icons .card-content { flex-direction: column; align-items: center; gap: 6px; }
+        .view-icons .details p { display: none; }
+        .view-icons .details h2 { font-size: 12px; text-align: center; }
+        .view-icons .chevron { display: none; }
+
+        /* Favoriten */
+        .favorites-section {
+            margin-top: 25px;
+            padding: 16px;
+            background: rgba(30, 41, 59, 0.4);
+            border: 2px dashed rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
+        }
+
+        .fav-star-btn {
+            background: none; border: none; font-size: 20px; cursor: pointer; padding: 4px; color: var(--text-secondary);
+        }
+        .fav-star-btn.active { color: var(--favorite-color); }
+
+        .no-favs {
+            color: var(--text-secondary); font-size: 13px; font-style: italic; text-align: center; padding: 10px;
+        }
+
+        /* -----------------------------------------------------------------
+           RAUMPLANUNG STYLE
+        ----------------------------------------------------------------- */
+        .booking-controls {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .booking-mode-selector {
+            display: flex;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: #0f172a;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        select, input[type="date"] {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        /* Monatskalender */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            padding-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+        }
+
+        .calendar-day.empty { visibility: hidden; }
+        .calendar-day.free { background: var(--green-free); color: var(--green-text); border-color: rgba(74, 222, 128, 0.4); }
+        .calendar-day.booked { background: var(--red-booked); color: var(--red-text); border-color: rgba(248, 113, 113, 0.4); }
+        .calendar-day.selected { border: 2px solid var(--accent); transform: scale(1.05); }
+
+        /* Raumlisten-Status */
+        .room-status-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .room-status-tag {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .status-free { background: var(--green-free); color: var(--green-text); }
+        .status-booked { background: var(--red-booked); color: var(--red-text); }
+
+        .book-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 id="title">Mein Cockpit</h1>
-        <button class="back-btn" id="backBtn" onclick="showMainView()">‹ Zurück</button>
+        <div class="greeting-container">
+            <h1 id="greetingTitle">Hallo Elisabeth</h1>
+            <p id="greetingSub">Willkommen in deinem Cockpit</p>
+        </div>
+        <div class="header-actions">
+            <button class="view-toggle-btn" id="viewToggleBtn" onclick="toggleViewMode()">📄 Liste</button>
+            <button class="back-btn" id="backBtn" onclick="showMainView()">‹ Zurück</button>
+        </div>
     </header>
 
-    <!-- EBENE 1: Hauptkategorien -->
+    <!-- EBENE 1: Hauptansicht -->
     <div id="mainView" class="view active">
-        <div class="card" onclick="openCategory('vpn')">
-            <div class="card-content">
-                <div class="icon">🔒</div>
-                <div class="details">
-                    <h2>VPN & Netzwerk</h2>
-                    <p>Uni Basel, bbv, eduroam</p>
+        
+        <!-- SPEZIELLER SEPARATER BUTTON FÜR RAUMPLANUNG BBV -->
+        <div class="special-button-container">
+            <div class="special-card" onclick="openRoomPlanner()">
+                <div class="card-content">
+                    <div class="icon">🏢</div>
+                    <div class="details">
+                        <h2>Raumplanung bbv</h2>
+                        <p>Räume buchen & Belegung prüfen</p>
+                    </div>
                 </div>
+                <span class="chevron" style="color: #38bdf8;">›</span>
             </div>
-            <span class="chevron">›</span>
         </div>
 
-        <div class="card" onclick="openCategory('auth')">
-            <div class="card-content">
-                <div class="icon">🔑</div>
-                <div class="details">
-                    <h2>Authentifizierung</h2>
-                    <p>Authenticator & Switch edu ID</p>
+        <div class="section-title">Kategorien</div>
+        <div id="categoriesContainer" class="grid-container view-list">
+            <div class="card" onclick="openCategory('vpn')">
+                <div class="card-content">
+                    <div class="icon">🔒</div>
+                    <div class="details">
+                        <h2>VPN & Netzwerk</h2>
+                        <p>Uni Basel, bbv, eduroam</p>
+                    </div>
                 </div>
+                <span class="chevron">›</span>
             </div>
-            <span class="chevron">›</span>
+
+            <div class="card" onclick="openCategory('auth')">
+                <div class="card-content">
+                    <div class="icon">🔑</div>
+                    <div class="details">
+                        <h2>Authentifizierung</h2>
+                        <p>Authenticator & Switch edu ID</p>
+                    </div>
+                </div>
+                <span class="chevron">›</span>
+            </div>
+
+            <div class="card" onclick="openCategory('storage')">
+                <div class="card-content">
+                    <div class="icon">📂</div>
+                    <div class="details">
+                        <h2>Literatur & Dateiablage</h2>
+                        <p>Zotero, OneDrive, Cloud</p>
+                    </div>
+                </div>
+                <span class="chevron">›</span>
+            </div>
+
+            <div class="card" onclick="openCategory('comm')">
+                <div class="card-content">
+                    <div class="icon">✉️</div>
+                    <div class="details">
+                        <h2>Mail & Kommunikation</h2>
+                        <p>E-Mail, Teams, Zoom, Coaching</p>
+                    </div>
+                </div>
+                <span class="chevron">›</span>
+            </div>
+
+            <div class="card" onclick="openCategory('smarthome')">
+                <div class="card-content">
+                    <div class="icon">🏠</div>
+                    <div class="details">
+                        <h2>Smart Home & Peripherie</h2>
+                        <p>Hue, Drucker, TV, Livebox</p>
+                    </div>
+                </div>
+                <span class="chevron">›</span>
+            </div>
         </div>
 
-        <div class="card" onclick="openCategory('storage')">
-            <div class="card-content">
-                <div class="icon">📂</div>
-                <div class="details">
-                    <h2>Literatur & Dateiablage</h2>
-                    <p>Zotero, OneDrive, Cloud</p>
-                </div>
+        <!-- FAVORITEN-BEREICH -->
+        <div class="favorites-section">
+            <div class="section-title" style="margin-top: 0;">⭐ Meine Favoriten</div>
+            <div id="favoritesContainer" class="grid-container view-list">
+                <!-- Wird dynamisch gefüllt -->
             </div>
-            <span class="chevron">›</span>
-        </div>
-
-        <div class="card" onclick="openCategory('comm')">
-            <div class="card-content">
-                <div class="icon">✉️</div>
-                <div class="details">
-                    <h2>Mail & Kommunikation</h2>
-                    <p>E-Mail, Teams, Zoom, Coaching</p>
-                </div>
-            </div>
-            <span class="chevron">›</span>
-        </div>
-
-        <div class="card" onclick="openCategory('smarthome')">
-            <div class="card-content">
-                <div class="icon">🏠</div>
-                <div class="details">
-                    <h2>Smart Home & Peripherie</h2>
-                    <p>Hue, Drucker, TV, Livebox</p>
-                </div>
-            </div>
-            <span class="chevron">›</span>
         </div>
     </div>
 
     <!-- EBENE 2: Unterkategorien (Details) -->
     <div id="subView" class="view">
-        <!-- Wird dynamisch per JavaScript befüllt -->
+        <div id="subContainer" class="grid-container view-list">
+            <!-- Wird dynamisch gefüllt -->
+        </div>
+    </div>
+
+    <!-- EBENE 3: Raumplanung bbv -->
+    <div id="roomView" class="view">
+        <div class="booking-controls">
+            <div class="booking-mode-selector">
+                <button class="mode-btn active" id="btnModeDate" onclick="setBookingMode('date')">Nach Datum suchen</button>
+                <button class="mode-btn" id="btnModeRoom" onclick="setBookingMode('room')">Nach Raum suchen</button>
+            </div>
+
+            <!-- Modus A: Datum wählen -->
+            <div id="groupDateSelect" class="control-group">
+                <label>Datum auswählen:</label>
+                <input type="date" id="bookingDateInput" onchange="renderRoomPlanner()">
+            </div>
+
+            <!-- Modus B: Raum wählen -->
+            <div id="groupRoomSelect" class="control-group" style="display: none;">
+                <label>bbv Raum auswählen:</label>
+                <select id="bookingRoomSelect" onchange="renderRoomPlanner()">
+                    <!-- Wird dynamisch mit allen 11 Räumen aus dem Screenshot befüllt -->
+                </select>
+            </div>
+        </div>
+
+        <!-- Dynamischer Ergebnisbereich -->
+        <div id="plannerResults"></div>
     </div>
 
     <script>
+        // 1. DYNAMISCHE BEGRÜSSUNG NACH TAGESZEIT
+        function setDynamicGreeting() {
+            const hour = new Date().getHours();
+            const greetingTitle = document.getElementById("greetingTitle");
+            
+            if (hour >= 5 && hour < 12) {
+                greetingTitle.innerText = "Guten Morgen Elisabeth";
+            } else if (hour >= 12 && hour < 18) {
+                greetingTitle.innerText = "Hallo Elisabeth";
+            } else {
+                greetingTitle.innerText = "Guten Abend Elisabeth";
+            }
+        }
+
+        // 2. RÄUME LISTE (Aus deinem Screenshot)
+        const bbvRooms = [
+            "Raum_Albert",
+            "Raum_Dreiländereck",
+            "Raum_Marie",
+            "Raum_Kantine",
+            "Raum_Homburg",
+            "Raum_Rheintal",
+            "Raum_Röttelnblick",
+            "Raum_Süd",
+            "Raum_Helene",
+            "Raum_EDV",
+            "Raum_Atrium"
+        ];
+
+        // Kategorien-Daten
         const categories = {
             vpn: {
                 title: "VPN & Netzwerk",
                 items: [
-                    { name: "GlobalProtect (Uni Basel)", desc: "VPN-Verbindung zur Uni Basel", icon: "🌐", link: "globalprotect://" },
-                    { name: "bbv VPN", desc: "Sicherer Zugang Firmennetz", icon: "🔒", link: "openvpn://" },
-                    { name: "Orange Livebox", desc: "Router-Interface im Browser", icon: "📶", link: "http://192.168.1.1" }
+                    { id: "gb_vpn", name: "GlobalProtect (Uni Basel)", desc: "VPN-Verbindung zur Uni Basel", icon: "🌐", link: "globalprotect://" },
+                    { id: "bbv_vpn", name: "bbv VPN", desc: "Sicherer Zugang Firmennetz", icon: "🔒", link: "openvpn://" },
+                    { id: "livebox", name: "Orange Livebox", desc: "Router-Interface im Browser", icon: "📶", link: "http://192.168.1.1" }
                 ]
             },
             auth: {
                 title: "Authentifizierung",
                 items: [
-                    { name: "Authenticator", desc: "2FA-Einmalcodes generieren", icon: "🔑", link: "otpauth://" },
-                    { name: "Switch edu ID", desc: "Zentraler Hochschul-Login", icon: "🎓", link: "https://eduid.ch" }
+                    { id: "auth_app", name: "Authenticator", desc: "2FA-Einmalcodes generieren", icon: "🔑", link: "otpauth://" },
+                    { id: "switch_edu", name: "Switch edu ID", desc: "Zentraler Hochschul-Login", icon: "🎓", link: "https://eduid.ch" }
                 ]
             },
             storage: {
                 title: "Literatur & Dateiablage",
                 items: [
-                    { name: "OneDrive / Cloud", desc: "Dokumente & Notizen", icon: "☁️", link: "ms-onedrive://" },
-                    { name: "Zotero / Literatur", desc: "Wissenschaftliche Quellen", icon: "📚", link: "https://www.zotero.org" }
+                    { id: "onedrive", name: "OneDrive / Cloud", desc: "Dokumente & Notizen", icon: "☁️", link: "ms-onedrive://" },
+                    { id: "zotero", name: "Zotero / Literatur", desc: "Wissenschaftliche Quellen", icon: "📚", link: "https://www.zotero.org" }
                 ]
             },
             comm: {
                 title: "Mail & Kommunikation",
                 items: [
-                    { name: "MS Teams", desc: "Online-Beratung & Meetings", icon: "👥", link: "msteams://" },
-                    { name: "Zoom", desc: "Videokonferenzen", icon: "📹", link: "zoomus://" },
-                    { name: "Webmail (one.com)", desc: "E-Mail Postfächer", icon: "✉️", link: "https://mail.one.com" }
+                    { id: "teams", name: "MS Teams", desc: "Online-Beratung & Meetings", icon: "👥", link: "msteams://" },
+                    { id: "zoom", name: "Zoom", desc: "Videokonferenzen", icon: "📹", link: "zoomus://" },
+                    { id: "webmail", name: "Webmail (one.com)", desc: "E-Mail Postfächer", icon: "✉️", link: "https://mail.one.com" }
                 ]
             },
             smarthome: {
                 title: "Smart Home & Peripherie",
                 items: [
-                    { name: "Philips Hue", desc: "Lichtsteuerung", icon: "💡", link: "hue://" },
-                    { name: "Epson Smart Panel", desc: "Drucken & Scannen", icon: "🖨️", link: "https://epson.com" }
+                    { id: "hue", name: "Philips Hue", desc: "Lichtsteuerung", icon: "💡", link: "hue://" },
+                    { id: "epson", name: "Epson Smart Panel", desc: "Drucken & Scannen", icon: "🖨️", link: "https://epson.com" }
                 ]
             }
         };
 
-        function openCategory(key) {
-            const cat = categories[key];
-            const subView = document.getElementById("subView");
-            const mainView = document.getElementById("mainView");
-            const backBtn = document.getElementById("backBtn");
-            const title = document.getElementById("title");
+        // Status-Speicher
+        let currentViewMode = 'view-list';
+        let favorites = JSON.parse(localStorage.getItem('my_cockpit_favs') || '[]');
+        let bookings = JSON.parse(localStorage.getItem('bbv_room_bookings') || '{}'); 
+        // Format: { "2026-11-01": ["Raum_Albert", "Raum_EDV"] }
 
-            title.innerText = cat.title;
-            backBtn.style.display = "block";
+        let bookingSearchMode = 'date'; // 'date' oder 'room'
+
+        // Init Datum auf heute setzen
+        document.getElementById('bookingDateInput').valueToDate = new Date();
+        document.getElementById('bookingDateInput').value = new Date().toISOString().split('T')[0];
+
+        // Räume in Dropdown laden
+        const roomSelect = document.getElementById('bookingRoomSelect');
+        bbvRooms.forEach(room => {
+            const opt = document.createElement('option');
+            opt.value = room;
+            opt.innerText = room.replace('_', ' ');
+            roomSelect.appendChild(opt);
+        });
+
+        function toggleViewMode() {
+            const btn = document.getElementById('viewToggleBtn');
+            const containers = [
+                document.getElementById('categoriesContainer'),
+                document.getElementById('favoritesContainer'),
+                document.getElementById('subContainer')
+            ];
+
+            containers.forEach(c => c.classList.remove('view-list', 'view-grid', 'view-icons'));
+
+            if (currentViewMode === 'view-list') {
+                currentViewMode = 'view-grid';
+                btn.innerHTML = '🔲 Kacheln';
+            } else if (currentViewMode === 'view-grid') {
+                currentViewMode = 'view-icons';
+                btn.innerHTML = '📱 Symbole';
+            } else {
+                currentViewMode = 'view-list';
+                btn.innerHTML = '📄 Liste';
+            }
+
+            containers.forEach(c => c.classList.add(currentViewMode));
+        }
+
+        function toggleFavorite(event, itemId) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            if (favorites.includes(itemId)) {
+                favorites = favorites.filter(id => id !== itemId);
+            } else {
+                favorites.push(itemId);
+            }
+
+            localStorage.setItem('my_cockpit_favs', JSON.stringify(favorites));
+            
+            const activeSub = document.querySelector('.fav-star-btn[data-id="' + itemId + '"]');
+            if(activeSub) activeSub.classList.toggle('active');
+            
+            renderFavorites();
+        }
+
+        function getAllItems() {
+            let all = [];
+            Object.values(categories).forEach(cat => { all = all.concat(cat.items); });
+            return all;
+        }
+
+        function renderFavorites() {
+            const favContainer = document.getElementById('favoritesContainer');
+            const allItems = getAllItems();
+            const favItems = allItems.filter(item => favorites.includes(item.id));
+
+            if (favItems.length === 0) {
+                favContainer.innerHTML = '<div class="no-favs">Noch keine Favoriten gewählt.<br>Klicke in einer Kategorie auf den Stern (⭐), um Apps hier hinzuzufügen.</div>';
+                return;
+            }
 
             let html = "";
-            cat.items.forEach(item => {
+            favItems.forEach(item => {
                 html += `
                     <a href="${item.link}" class="card">
                         <div class="card-content">
@@ -266,22 +654,195 @@
                                 <p>${item.desc}</p>
                             </div>
                         </div>
-                        <span class="chevron">↗</span>
+                        <button class="fav-star-btn active" data-id="${item.id}" onclick="toggleFavorite(event, '${item.id}')">★</button>
+                    </a>
+                `;
+            });
+            favContainer.innerHTML = html;
+        }
+
+        function openCategory(key) {
+            const cat = categories[key];
+            const subContainer = document.getElementById("subContainer");
+            const mainView = document.getElementById("mainView");
+            const backBtn = document.getElementById("backBtn");
+            const title = document.getElementById("greetingTitle");
+            const sub = document.getElementById("greetingSub");
+
+            title.innerText = cat.title;
+            sub.innerText = "Kategorieübersicht";
+            backBtn.style.display = "flex";
+
+            let html = "";
+            cat.items.forEach(item => {
+                const isFav = favorites.includes(item.id);
+                html += `
+                    <a href="${item.link}" class="card">
+                        <div class="card-content">
+                            <div class="icon">${item.icon}</div>
+                            <div class="details">
+                                <h2>${item.name}</h2>
+                                <p>${item.desc}</p>
+                            </div>
+                        </div>
+                        <button class="fav-star-btn ${isFav ? 'active' : ''}" data-id="${item.id}" onclick="toggleFavorite(event, '${item.id}')">★</button>
                     </a>
                 `;
             });
 
-            subView.innerHTML = html;
+            subContainer.innerHTML = html;
             mainView.classList.remove("active");
-            subView.classList.add("active");
+            document.getElementById("roomView").classList.remove("active");
+            document.getElementById("subView").classList.add("active");
+        }
+
+        // 3. RAUMPLANER STEUERUNG
+        function openRoomPlanner() {
+            document.getElementById("mainView").classList.remove("active");
+            document.getElementById("subView").classList.remove("active");
+            document.getElementById("roomView").classList.add("active");
+            
+            document.getElementById("backBtn").style.display = "flex";
+            document.getElementById("greetingTitle").innerText = "Raumplanung bbv";
+            document.getElementById("greetingSub").innerText = "Belegungsplan & Buchungen";
+
+            renderRoomPlanner();
+        }
+
+        function setBookingMode(mode) {
+            bookingSearchMode = mode;
+            document.getElementById('btnModeDate').classList.toggle('active', mode === 'date');
+            document.getElementById('btnModeRoom').classList.toggle('active', mode === 'room');
+            
+            document.getElementById('groupDateSelect').style.display = mode === 'date' ? 'flex' : 'none';
+            document.getElementById('groupRoomSelect').style.display = mode === 'room' ? 'flex' : 'none';
+
+            renderRoomPlanner();
+        }
+
+        function toggleRoomBooking(dateStr, roomName) {
+            if (!bookings[dateStr]) {
+                bookings[dateStr] = [];
+            }
+
+            if (bookings[dateStr].includes(roomName)) {
+                bookings[dateStr] = bookings[dateStr].filter(r => r !== roomName);
+            } else {
+                bookings[dateStr].push(roomName);
+            }
+
+            localStorage.setItem('bbv_room_bookings', JSON.stringify(bookings));
+            renderRoomPlanner();
+        }
+
+        function renderRoomPlanner() {
+            const results = document.getElementById("plannerResults");
+            results.innerHTML = "";
+
+            if (bookingSearchMode === 'date') {
+                // MODUS 1: Datum gewählt -> Alle Räume mit Status anzeigen
+                const dateStr = document.getElementById('bookingDateInput').value;
+                if (!dateStr) return;
+
+                const bookedInDate = bookings[dateStr] || [];
+
+                let html = `<div class="section-title">Belegung am ${formatDateDE(dateStr)}</div>`;
+
+                bbvRooms.forEach(room => {
+                    const isBooked = bookedInDate.includes(room);
+                    html += `
+                        <div class="room-status-card">
+                            <div>
+                                <strong style="font-size: 15px;">${room.replace('_', ' ')}</strong>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <span class="room-status-tag ${isBooked ? 'status-booked' : 'status-free'}">
+                                    ${isBooked ? 'Gebucht' : 'Frei'}
+                                </span>
+                                <button class="book-action-btn" onclick="toggleRoomBooking('${dateStr}', '${room}')">
+                                    ${isBooked ? 'Stornieren' : 'Buchen'}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                results.innerHTML = html;
+
+            } else {
+                // MODUS 2: Raum gewählt -> Monatskalender mit Grün/Rot anzeigen
+                const selectedRoom = document.getElementById('bookingRoomSelect').value;
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = now.getMonth();
+
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = So, 1 = Mo...
+                const adjustedFirstDay = (firstDayIndex === 0 ? 6 : firstDayIndex - 1); // Mo = 0
+
+                let html = `
+                    <div class="section-title">Kalenderansicht für ${selectedRoom.replace('_', ' ')}</div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header">Mo</div>
+                        <div class="calendar-day-header">Di</div>
+                        <div class="calendar-day-header">Mi</div>
+                        <div class="calendar-day-header">Do</div>
+                        <div class="calendar-day-header">Fr</div>
+                        <div class="calendar-day-header">Sa</div>
+                        <div class="calendar-day-header">So</div>
+                `;
+
+                // Leere Felder vor dem 1. des Monats
+                for (let i = 0; i < adjustedFirstDay; i++) {
+                    html += `<div class="calendar-day empty"></div>`;
+                }
+
+                // Tage des Monats
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const monthStr = String(month + 1).padStart(2, '0');
+                    const dayStr = String(day).padStart(2, '0');
+                    const fullDateStr = `${year}-${monthStr}-${dayStr}`;
+
+                    const isBooked = bookings[fullDateStr] && bookings[fullDateStr].includes(selectedRoom);
+
+                    html += `
+                        <div class="calendar-day ${isBooked ? 'booked' : 'free'}" 
+                             onclick="toggleRoomBooking('${fullDateStr}', '${selectedRoom}')"
+                             title="${formatDateDE(fullDateStr)}: ${isBooked ? 'Gebucht (Klick zum Stornieren)' : 'Frei (Klick zum Buchen)'}">
+                            ${day}
+                        </div>
+                    `;
+                }
+
+                html += `</div>
+                    <div style="margin-top: 15px; display: flex; gap: 15px; justify-content: center; font-size: 12px;">
+                        <span style="color: var(--green-text);">■ Leicht Grün = Raum Frei</span>
+                        <span style="color: var(--red-text);">■ Leicht Rot = Raum Gebucht</span>
+                    </div>
+                `;
+                results.innerHTML = html;
+            }
+        }
+
+        function formatDateDE(dateStr) {
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            return `${parts[2]}.${parts[1]}.${parts[0]}`;
         }
 
         function showMainView() {
             document.getElementById("mainView").classList.add("active");
             document.getElementById("subView").classList.remove("active");
+            document.getElementById("roomView").classList.remove("active");
             document.getElementById("backBtn").style.display = "none";
-            document.getElementById("title").innerText = "Mein Cockpit";
+            
+            setDynamicGreeting();
+            document.getElementById("greetingSub").innerText = "Willkommen in deinem Cockpit";
+            renderFavorites();
         }
+
+        // Init
+        setDynamicGreeting();
+        renderFavorites();
     </script>
 </body>
 </html>
